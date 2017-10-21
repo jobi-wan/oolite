@@ -552,6 +552,8 @@
 		B3B46C881A0D053D00D6C39B /* OOSystemDescriptionManager.h in Headers */ = {isa = PBXBuildFile; fileRef = B3B46C851A0D053D00D6C39B /* OOSystemDescriptionManager.h */; };
 		B3B46C891A0D053D00D6C39B /* OOSystemDescriptionManager.m in Copy Plug-ins */ = {isa = PBXBuildFile; fileRef = B3B46C861A0D053D00D6C39B /* OOSystemDescriptionManager.m */; };
 		B3B46C8A1A0D053D00D6C39B /* OOSystemDescriptionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B3B46C861A0D053D00D6C39B /* OOSystemDescriptionManager.m */; };
+		CCD1DED51F9B4A0A006EC540 /* PlistFix.c in Sources */ = {isa = PBXBuildFile; fileRef = CCD1DED31F9B4A0A006EC540 /* PlistFix.c */; };
+		CCD1DED61F9B4A0A006EC540 /* PlistFix.h in Headers */ = {isa = PBXBuildFile; fileRef = CCD1DED41F9B4A0A006EC540 /* PlistFix.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1700,6 +1702,8 @@
 		B3B46C851A0D053D00D6C39B /* OOSystemDescriptionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOSystemDescriptionManager.h; sourceTree = "<group>"; };
 		B3B46C861A0D053D00D6C39B /* OOSystemDescriptionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOSystemDescriptionManager.m; sourceTree = "<group>"; };
 		B3EC10B6155C154000778240 /* OOLegalStatusReason.tbl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = OOLegalStatusReason.tbl; sourceTree = "<group>"; };
+		CCD1DED31F9B4A0A006EC540 /* PlistFix.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = PlistFix.c; sourceTree = "<group>"; };
+		CCD1DED41F9B4A0A006EC540 /* PlistFix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlistFix.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -3168,6 +3172,7 @@
 			children = (
 				1AA0861518257A11007CCAEB /* OpenAL.framework */,
 				1A5D58811825241800C779AE /* MiniZip */,
+				CCD1DED21F9B4A0A006EC540 /* PlistFix */,
 				1AB775FC12CA2E53001478BB /* libjs.xcodeproj */,
 				1AE3454B12CB77A700FD8C62 /* Ogg.xcodeproj */,
 				1AE3455112CB77AC00FD8C62 /* Vorbis.xcodeproj */,
@@ -3177,6 +3182,16 @@
 				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		CCD1DED21F9B4A0A006EC540 /* PlistFix */ = {
+			isa = PBXGroup;
+			children = (
+				CCD1DED31F9B4A0A006EC540 /* PlistFix.c */,
+				CCD1DED41F9B4A0A006EC540 /* PlistFix.h */,
+			);
+			name = PlistFix;
+			path = src/Core/PlistFix;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -3271,6 +3286,7 @@
 				1ADBA5500BD0F173008FC99C /* OOBasicMaterial.h in Headers */,
 				1A2A16690BD10B1200152975 /* OOSingleTextureMaterial.h in Headers */,
 				1A2A17D60BD1587D00152975 /* OOCPUInfo.h in Headers */,
+				CCD1DED61F9B4A0A006EC540 /* PlistFix.h in Headers */,
 				1A2A1B090BD276A900152975 /* OOEntityWithDrawable.h in Headers */,
 				1A2A1B160BD2774300152975 /* OODrawable.h in Headers */,
 				1A2A1CAC0BD2914F00152975 /* OOMesh.h in Headers */,
@@ -3763,6 +3779,7 @@
 				1A5DB1EB0BBD8F0000D57389 /* OOConstToString.m in Sources */,
 				1AD2E31718F17BC700239EBB /* OOShipLibraryDescriptions.m in Sources */,
 				1A5DBAA70BC000DC00D57389 /* OOJavaScriptEngine.m in Sources */,
+				CCD1DED51F9B4A0A006EC540 /* PlistFix.c in Sources */,
 				1A5DBAA90BC000DC00D57389 /* OOJSScript.m in Sources */,
 				1A5DBAAB0BC000DC00D57389 /* OOPListScript.m in Sources */,
 				1A5DBAAE0BC000DC00D57389 /* OOScript.m in Sources */,

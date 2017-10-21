@@ -27,6 +27,9 @@ MA 02110-1301, USA.
 #import "OOLogging.h"
 #import "OOStringParsing.h"
 #import "NSDataOOExtensions.h"
+#if OOLITE_USE_PLIST_FIXER
+#include "PlistFix.h"
+#endif
 #include <ctype.h>
 #include <string.h>
 
@@ -70,6 +73,29 @@ id OOPropertyListFromData(NSData *data, NSString *whereFrom)
 			if (whereFrom == nil) whereFrom = @"<data in memory>";
 			
 			OOLog(kOOLogPListFoundationParseError, @"Failed to parse %@ as a property list.\n%@", whereFrom, error);
+
+#if OOLITE_USE_PLIST_FIXER
+			{	// See if we can fix it...
+				const char *bytes;
+				unsigned long length;
+				
+				bytes = [data bytes];
+				length = [data length];
+				
+				bytes = plist_fix(bytes,&length);
+				
+				if (bytes)
+				{
+					[data initWithBytes:bytes length:length];
+					result = [NSPropertyListSerialization propertyListFromData:data mutabilityOption:NSPropertyListImmutable format:NULL errorDescription:&error];
+					
+					if (result == nil)
+						OOLog(kOOLogPListFoundationParseError, @"Unfixable");
+					else
+						OOLog(kOOLogPListFoundationParseError, @"Fixed");
+				}
+			}
+#endif
 		}
 	}
 	
