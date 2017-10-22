@@ -183,7 +183,7 @@ static token_type token_read(mem_buf *src)
 		else if (!strcmp(token_text,"/*"))
 		{
 			p = 0;
-			while (c != '/' || p != '*')
+			while ((c != '/' || p != '*') && c != mem_buf_eof)
 			{
 				p = c;
 				c = mem_buf_getc(src);
