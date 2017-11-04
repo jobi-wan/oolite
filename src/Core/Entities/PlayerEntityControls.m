@@ -491,6 +491,90 @@ static NSTimeInterval	time_last_frame;
 }
 
 
+- (void) handleButtonPause
+{
+	GameController	*gameController = [UNIVERSE gameController];
+	MyOpenGLView	*gameView = [UNIVERSE gameView];
+	BOOL 			paused = [gameController isGamePaused];
+	
+	if ([self status] == STATUS_DOCKED)
+	{
+		if (paused)	// resume
+		{
+			script_time = saved_script_time;
+			[gameView allowStringInput:NO];
+			if ([UNIVERSE pauseMessageVisible])
+			{
+				[UNIVERSE clearPreviousMessage];	// remove the 'paused' message.
+			}
+			[[UNIVERSE gui] setForegroundTextureKey:@"docked_overlay"];
+			[gameController setGamePaused:NO];
+		}
+		else	// pause
+		{
+			saved_script_time = script_time;
+			[[UNIVERSE messageGUI] clear];
+			[UNIVERSE pauseGame];	// 'paused' handler
+		}
+	}
+	else // flight
+	{
+		if (paused)	// resume
+		{
+			script_time = saved_script_time;
+			// Reset to correct GUI screen, if we are unpausing from one.
+			// Don't set gui_screen here, use setGuis - they also switch backgrounds.
+			// No gui switching events will be triggered while still paused.
+			switch (saved_gui_screen)
+			{
+				case GUI_SCREEN_STATUS:
+					[self setGuiToStatusScreen];
+					break;
+				case GUI_SCREEN_LONG_RANGE_CHART:
+					[self setGuiToLongRangeChartScreen];
+					break;
+				case GUI_SCREEN_SHORT_RANGE_CHART:
+					[self setGuiToShortRangeChartScreen];
+					break;
+				case GUI_SCREEN_MANIFEST:
+					[self setGuiToManifestScreen];
+					break;
+				case GUI_SCREEN_MARKET:
+					[self setGuiToMarketScreen];
+					break;
+				case GUI_SCREEN_MARKETINFO:
+					[self setGuiToMarketInfoScreen];
+					break;
+				case GUI_SCREEN_SYSTEM_DATA:
+					// Do not reset planet rotation if we are already in the system info screen!
+					if (gui_screen != GUI_SCREEN_SYSTEM_DATA)
+						[self setGuiToSystemDataScreen];
+					break;
+				default:
+					gui_screen = saved_gui_screen;	// make sure we're back to the right screen
+					break;
+			}
+			[gameView allowStringInput:NO];
+			[UNIVERSE clearPreviousMessage];
+			[UNIVERSE setViewDirection:saved_view_direction];
+			currentWeaponFacing = saved_weapon_facing;
+			// make sure the light comes from the right direction after resuming from pause!
+			if (saved_gui_screen == GUI_SCREEN_SYSTEM_DATA) [UNIVERSE setMainLightPosition:_sysInfoLight];
+			[[UNIVERSE gui] setForegroundTextureKey:@"overlay"];
+			[gameController setGamePaused:NO];
+		}
+		else	// pause
+		{
+			saved_view_direction = [UNIVERSE viewDirection];
+			saved_script_time = script_time;
+			saved_gui_screen = gui_screen;
+			saved_weapon_facing = currentWeaponFacing;
+			[UNIVERSE pauseGame];	// pause handler
+		}
+	}
+}
+
+
 - (void) targetNewSystem:(int) direction whileTyping:(BOOL) whileTyping
 {
 	target_system_id = [[UNIVERSE gui] targetNextFoundSystem:direction];
@@ -1592,60 +1676,9 @@ static NSTimeInterval	time_last_frame;
 		{
 			if (!pause_pressed)
 			{
-				if (paused)
-				{
-					script_time = saved_script_time;
-					// Reset to correct GUI screen, if we are unpausing from one.
-					// Don't set gui_screen here, use setGuis - they also switch backgrounds.
-					// No gui switching events will be triggered while still paused.
-					switch (saved_gui_screen)
-					{
-						case GUI_SCREEN_STATUS:
-							[self setGuiToStatusScreen];
-							break;
-						case GUI_SCREEN_LONG_RANGE_CHART:
-							[self setGuiToLongRangeChartScreen];
-							break;
-						case GUI_SCREEN_SHORT_RANGE_CHART:
-							[self setGuiToShortRangeChartScreen];
-							break;
-						case GUI_SCREEN_MANIFEST:
-							[self setGuiToManifestScreen];
-							break;
-						case GUI_SCREEN_MARKET:
-							[self setGuiToMarketScreen];
-							break;
-						case GUI_SCREEN_MARKETINFO:
-							[self setGuiToMarketInfoScreen];
-							break;
-						case GUI_SCREEN_SYSTEM_DATA:
-							// Do not reset planet rotation if we are already in the system info screen!
-							if (gui_screen != GUI_SCREEN_SYSTEM_DATA)
-								[self setGuiToSystemDataScreen];
-							break;
-						default:
-							gui_screen = saved_gui_screen;	// make sure we're back to the right screen
-							break;
-					}
-					[gameView allowStringInput:NO];
-					[UNIVERSE clearPreviousMessage];
-					[UNIVERSE setViewDirection:saved_view_direction];
-					currentWeaponFacing = saved_weapon_facing;
-					// make sure the light comes from the right direction after resuming from pause!
-					if (saved_gui_screen == GUI_SCREEN_SYSTEM_DATA) [UNIVERSE setMainLightPosition:_sysInfoLight];
-					[[UNIVERSE gui] setForegroundTextureKey:@"overlay"];
-					[[UNIVERSE gameController] setGamePaused:NO];
-				}
-				else
-				{
-					saved_view_direction = [UNIVERSE viewDirection];
-					saved_script_time = script_time;
-					saved_gui_screen = gui_screen;
-					saved_weapon_facing = currentWeaponFacing;
-					[UNIVERSE pauseGame];	// pause handler
-				}
+				[self handleButtonPause];
+				pause_pressed = YES;
 			}
-			pause_pressed = YES;
 		}
 		else
 		{
@@ -4225,26 +4258,9 @@ static BOOL autopilot_pause;
 		{
 			if (!pause_pressed)
 			{
-				if ([gameController isGamePaused])
-				{
-					script_time = saved_script_time;
-					[gameView allowStringInput:NO];
-					if ([UNIVERSE pauseMessageVisible])
-					{
-						[UNIVERSE clearPreviousMessage];	// remove the 'paused' message.
-					}
-					[[UNIVERSE gui] setForegroundTextureKey:@"docked_overlay"];
-					[gameController setGamePaused:NO];
-				}
-				else
-				{
-					saved_script_time = script_time;
-					[[UNIVERSE messageGUI] clear];
-					
-					[UNIVERSE pauseGame];	// 'paused' handler
-				}
+				[self handleButtonPause];
+				pause_pressed = YES;
 			}
-			pause_pressed = YES;
 		}
 		else
 		{

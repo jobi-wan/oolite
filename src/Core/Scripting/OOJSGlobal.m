@@ -597,13 +597,12 @@ static JSBool GlobalPauseGame(JSContext *context, uintN argc, jsval *vp)
 	{
 		OOGUIScreenID guiScreen = [player guiScreen];
 		
-		if 	(guiScreen != GUI_SCREEN_LONG_RANGE_CHART &&
+		if	(guiScreen != GUI_SCREEN_LONG_RANGE_CHART &&
 			 guiScreen != GUI_SCREEN_MISSION &&
 			 guiScreen != GUI_SCREEN_REPORT &&
 			 guiScreen != GUI_SCREEN_SAVE)
 		{
-			[UNIVERSE pauseGame];
-			result = YES;
+			result = [player pauseControl];
 		}
 	}
 	

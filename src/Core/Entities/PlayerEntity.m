@@ -2200,6 +2200,17 @@ NSComparisonResult marketSorterByMassUnit(id a, id b, void *market);
 }
 
 
+- (BOOL) pauseControl
+{
+	if ([[UNIVERSE gameController] isGamePaused])
+		return NO;
+	
+	[self handleButtonPause];
+	
+	return YES;
+}
+
+
 - (BOOL) setUpShipFromDictionary:(NSDictionary *)shipDict
 {
 	DESTROY(compassTarget);

@@ -747,6 +747,7 @@ typedef enum
 - (void) completeSetUp;
 - (void) completeSetUpAndSetTarget:(BOOL)setTarget;
 - (void) startUpComplete;
+- (BOOL) pauseControl;
 
 - (NSString *) commanderName;
 - (void) setCommanderName:(NSString *)value;
