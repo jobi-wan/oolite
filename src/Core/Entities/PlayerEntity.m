@@ -11054,6 +11054,11 @@ static NSString *last_outfitting_key=nil;
 	[gui setColor:[gui colorFromSetting:kGuiMarketCashColor defaultValue:[OOColor yellowColor]] forRow:GUI_ROW_MARKET_CASH];
 }
 
+- (void) setGuiScreen:(OOGUIScreenID)screen;
+{
+	gui_screen = screen;
+}
+
 - (OOGUIScreenID) guiScreen
 {
 	return gui_screen;

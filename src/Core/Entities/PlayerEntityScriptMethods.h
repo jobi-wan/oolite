@@ -52,6 +52,7 @@ MA 02110-1301, USA.
 - (void) allowMissionInterrupt;
 
 - (OOTimeDelta) scriptTimer;
+- (void) setScriptTimer:(double)time;
 
 - (unsigned) systemPseudoRandom100;
 - (unsigned) systemPseudoRandom256;

@@ -837,6 +837,7 @@ typedef enum
 - (float) weaponRechargeRate;
 - (void) setWeaponRechargeRate:(float)value;
 - (void) setWeaponEnergy:(float)value;
+- (void) setWeaponFacing:(OOWeaponFacing)weaponFacing;
 - (OOWeaponFacing) currentWeaponFacing;
 
 - (GLfloat) scannerRange;

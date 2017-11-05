@@ -7511,6 +7511,10 @@ static BOOL IsBehaviourHostile(OOBehaviour behaviour)
 	weapon_damage = value;
 }
 
+- (void) setWeaponFacing:(OOWeaponFacing)weaponFacing
+{
+	currentWeaponFacing = weaponFacing;
+}
 
 -	(OOWeaponFacing) currentWeaponFacing
 {

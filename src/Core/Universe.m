@@ -560,17 +560,24 @@ static GLfloat	docked_light_specular[4]	= { DOCKED_ILLUM_LEVEL, DOCKED_ILLUM_LEV
 }
 #endif
 
+static int				saved_view_direction;
+static double			saved_script_time;
+static int				saved_gui_screen;
+static OOWeaponFacing	saved_weapon_facing;
 
 - (void) pauseGame
 {
 	// deal with the machine going to sleep, or player pressing 'p'.
-	PlayerEntity 	*player = PLAYER;
+	PlayerEntity	*player = PLAYER;
+	NSString		*pauseKey = [PLAYER keyBindingDescription:@"key_pausebutton"];
 	
 	[self setPauseMessageVisible:NO];
-	NSString *pauseKey = [PLAYER keyBindingDescription:@"key_pausebutton"];
+	saved_script_time = [player scriptTimer];
 	
 	if ([player status] == STATUS_DOCKED)
 	{
+		[message_gui clear];
+		
 		if ([gui setForegroundTextureKey:@"paused_docked_overlay"])
 		{
 			[gui drawGUI:1.0 drawCursor:NO];
@@ -583,6 +590,10 @@ static GLfloat	docked_light_specular[4]	= { DOCKED_ILLUM_LEVEL, DOCKED_ILLUM_LEV
 	}
 	else
 	{
+		saved_view_direction = viewDirection;
+		saved_gui_screen = [player guiScreen];
+		saved_weapon_facing = [player currentWeaponFacing];
+		
 		if ([player guiScreen] != GUI_SCREEN_MAIN && [gui setForegroundTextureKey:@"paused_overlay"])
 		{
 			[gui drawGUI:1.0 drawCursor:NO];
@@ -595,6 +606,66 @@ static GLfloat	docked_light_specular[4]	= { DOCKED_ILLUM_LEVEL, DOCKED_ILLUM_LEV
 	}
 	
 	[[self gameController] setGamePaused:YES];
+}
+
+
+- (void) resumeGame
+{
+	PlayerEntity 	*player = PLAYER;
+	
+	[player setScriptTimer:saved_script_time];
+
+	if ([player status] == STATUS_DOCKED)
+	{
+		[gameView allowStringInput:NO];
+		if (_pauseMessage)
+		{
+			[self clearPreviousMessage];	// remove the 'paused' message.
+		}
+		[gui setForegroundTextureKey:@"docked_overlay"];
+	}
+	else
+	{
+		// Reset to correct GUI screen, if we are unpausing from one.
+		// Don't set gui_screen here, use setGuis - they also switch backgrounds.
+		// No gui switching events will be triggered while still paused.
+		switch (saved_gui_screen)
+		{
+			case GUI_SCREEN_STATUS:
+				[player setGuiToStatusScreen];
+				break;
+			case GUI_SCREEN_LONG_RANGE_CHART:
+				[player setGuiToLongRangeChartScreen];
+				break;
+			case GUI_SCREEN_SHORT_RANGE_CHART:
+				[player setGuiToShortRangeChartScreen];
+				break;
+			case GUI_SCREEN_MANIFEST:
+				[player setGuiToManifestScreen];
+				break;
+			case GUI_SCREEN_MARKET:
+				[player setGuiToMarketScreen];
+				break;
+			case GUI_SCREEN_MARKETINFO:
+				[player setGuiToMarketInfoScreen];
+				break;
+			case GUI_SCREEN_SYSTEM_DATA:
+				// Do not reset planet rotation if we are already in the system info screen!
+				if ([player guiScreen] != GUI_SCREEN_SYSTEM_DATA)
+					[player setGuiToSystemDataScreen];
+				break;
+			default:
+				[player setGuiScreen:saved_gui_screen];	// make sure we're back to the right screen
+				break;
+		}
+		[gameView allowStringInput:NO];
+		[self clearPreviousMessage];
+		[self setViewDirection:saved_view_direction];
+		[player setWeaponFacing:saved_weapon_facing];
+		
+		[gui setForegroundTextureKey:@"overlay"];
+	}
+	[[self gameController] setGamePaused:NO];
 }
 
 

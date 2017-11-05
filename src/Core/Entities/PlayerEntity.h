@@ -1047,6 +1047,7 @@ typedef enum
 - (void) noteGUIDidChangeFrom:(OOGUIScreenID)fromScreen to:(OOGUIScreenID)toScreen;
 - (void) noteViewDidChangeFrom:(OOViewID)fromView toView:(OOViewID)toView;
 
+- (void) setGuiScreen:(OOGUIScreenID)screen;
 - (OOGUIScreenID) guiScreen;
 
 - (void) buySelectedItem;

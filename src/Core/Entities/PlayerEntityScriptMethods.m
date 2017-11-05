@@ -227,6 +227,12 @@ MA 02110-1301, USA.
 }
 
 
+- (void) setScriptTimer:(double)time
+{
+	script_time = time;
+}
+
+
 /* FIXME: these next three functions seed the RNG when called. That
  * could cause unwanted effects - should save its state, and then
  * reset it after generating the number. */
